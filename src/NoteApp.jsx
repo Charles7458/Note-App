@@ -216,8 +216,10 @@ function NoteApp() {
         <div className='NoteApp'>
             <h1 className='heading'>Note App</h1>
             <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day}</h3>
-            <input type='text' placeholder='Search a note title' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
-            <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
+            <label className='search-wrapper'>
+                <input type='text' placeholder='Search a note title' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
+                <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
+            </label>
             <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
             <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}}/>
 

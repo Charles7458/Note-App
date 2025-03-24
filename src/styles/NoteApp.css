@@ -142,18 +142,23 @@ body {
     text-align: center;
 }
 
+.search-wrapper {
+    margin: 50px 0px;
+}
+
 .search {
-    position: absolute;
-    top: 5%;
-    right: 6%;
-    padding: 10px 30px 10px 20px;
+    height: clamp(30px, 2vw, 60px);
+    padding-left: clamp(10px,1vw, 20px);
+    padding-right: clamp(10px,1vw, 20px);
+    width: clamp(150px, 15vw, 200px);
     border-radius: 20px;
+    text-overflow: ellipsis;
 }
 
 .clear-btn {
-    position: absolute;
-    top: 6%;
-    right: 7%;
+    position: relative;
+    top: 8px;
+    right: 30px;
     cursor: pointer;
 }
 
@@ -168,7 +173,12 @@ body {
 
 
 @media (max-width: 500px) {
+    .NoteApp {
+        padding: 20px;
+    }
     .notes {
         grid-template-columns: 1fr;
     }
+
+    
 }
