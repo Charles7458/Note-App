@@ -90,6 +90,7 @@ function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, 
                 <div style={{display:"flex", margin:"5px 0px", justifyContent:"flex-end"}}>
                     <span onClick={e=> {e.stopPropagation; handleClose()}} style={{cursor:"pointer"}}><box-icon name="x" size="m" color="#ffffff"></box-icon></span>
                 </div>
+                <b>Date: {date}</b> <br/>
                 <b>Title:</b> <br/>
                 <input type='text' value={newTitle} onChange={e => setNewTitle(e.target.value)} className='title-input' /> <br />
                 <b>Content:</b> <br />
@@ -128,16 +129,6 @@ function Note({id, date, title, content, onEdit, onDelete}) {
 
 function NoteApp() {
 
-    const [nextId, setNextId] = useState(1);
-
-    const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
-    const [showPopup, setShowPopup] = useState(false);
-    const [showDelPopup, setShowDelPopup] = useState(false);
-    const [selectedNote, setSelectedNote] = useState();
-    const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : undefined), [selectedNote]) ;
-    const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : undefined) ,[selectedNote]) ;
-    const [search, setSearch] = useState("");
-    const [searchText, setSearchText] = useState("");
     const [date, setDate] = useState(new Date());
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const day = days[date.getDay()];
@@ -145,12 +136,23 @@ function NoteApp() {
     const initialNotes=[
         {
             id: 0,
-            date: date.toLocaleDateString,
+            date: date.toLocaleDateString(),
             title:"Intro",
             content: "Hello User, this is a new note taking app. "+
             "Press the + icon to add a new note. You can also edit and delete a note by clicking the ... menu"
         }
     ]
+
+    const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
+    const nextId = notes.length;
+    const [showPopup, setShowPopup] = useState(false);
+    const [showDelPopup, setShowDelPopup] = useState(false);
+    const [selectedNote, setSelectedNote] = useState();
+    const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : undefined), [selectedNote]) ;
+    const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : undefined) ,[selectedNote]) ;
+    const [search, setSearch] = useState("");
+    const [searchText, setSearchText] = useState("");
+    
 
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
@@ -177,7 +179,6 @@ function NoteApp() {
             title: note.title,
             content: note.content
         }
-        setNextId(nextId+1);
         setShowPopup(false);
 
         dispatch(
@@ -217,11 +218,20 @@ function NoteApp() {
     function handleSearch() {
         setSearch(searchText);
     }
+
+    function handleReset(){
+        localStorage.clear();
+        location.reload();
+    }
     
     return ( 
 
         <div className='NoteApp'>
-            <h1 className='heading'>Note App</h1>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'100%'}}>
+                <h1 className='heading'>Note App</h1>
+                <button className='reset-btn' onClick={handleReset}>Reset App</button>
+            </div>
+
             <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day}</h3>
             <label className='search-wrapper'>
                 <input type='text' placeholder='Search a note title' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
