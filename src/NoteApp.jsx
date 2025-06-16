@@ -10,6 +10,7 @@ function noteReducer(notes, action) {
             console.log(`note added. ID: ${action.id}`);
            return [...notes, {
             id: action.id,
+            date: action.date,
             title: action.title,
             content: action.content,
            }];
@@ -19,7 +20,7 @@ function noteReducer(notes, action) {
             return notes.map( (note) => {
                 if (note.id === action.id) {
                     return note = {
-                        id: note.id,
+                        ...note,
                         title: action.title,
                         content: action.content
                     }
@@ -59,7 +60,7 @@ function DelPopup({isOpen, onYes, onNo}) {
     )
 }
 
-function PopUp({isOpen, id=null, title, content, onSave, onEdit, onClose, action}) {
+function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, action}) {
     let [newTitle, setNewTitle] = useState(title);
     let [newContent, setNewContent] = useState(content);
 
@@ -68,7 +69,7 @@ function PopUp({isOpen, id=null, title, content, onSave, onEdit, onClose, action
     }
 
     function handleSave() {
-        onSave({title: newTitle, content: newContent});
+        onSave({title: newTitle, content: newContent, date: date});
         setNewTitle();
         setNewContent();
     }
@@ -99,7 +100,7 @@ function PopUp({isOpen, id=null, title, content, onSave, onEdit, onClose, action
     )
 }
 
-function Note({id, title, content, onEdit, onDelete}) {
+function Note({id, date, title, content, onEdit, onDelete}) {
     function editClick() {
         onEdit(id,title, content)
     }
@@ -117,8 +118,9 @@ function Note({id, title, content, onEdit, onDelete}) {
             </div>
 
             <div className='note-text'>
+                <p style={{color:'lightgray',fontSize:'17px'}}>{date}</p>
                 <h2 className='note-title' style={{textDecoration:"underline", marginBottom:"15px"}}>{title}</h2> 
-                <p className='note-para'>{content}</p>
+                <p style={{whiteSpace:'pre-wrap'}}>{content}</p>
             </div>
         </div>
     )
@@ -127,13 +129,6 @@ function Note({id, title, content, onEdit, onDelete}) {
 function NoteApp() {
 
     const [nextId, setNextId] = useState(1);
-    const initialNotes=[
-        {
-            id: 0,
-            title:"Intro",
-            content: "Hello User, this is a new note taking app. Press the + icon to add a new note. You can also edit and delete a note by clicking the ... menu"
-        }
-    ]
 
     const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
     const [showPopup, setShowPopup] = useState(false);
@@ -146,6 +141,16 @@ function NoteApp() {
     const [date, setDate] = useState(new Date());
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const day = days[date.getDay()];
+
+    const initialNotes=[
+        {
+            id: 0,
+            date: date.toLocaleDateString,
+            title:"Intro",
+            content: "Hello User, this is a new note taking app. "+
+            "Press the + icon to add a new note. You can also edit and delete a note by clicking the ... menu"
+        }
+    ]
 
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
@@ -168,6 +173,7 @@ function NoteApp() {
     function handleAddNotes(note) {
         const newNote = {
             id: nextId,
+            date: note.date,
             title: note.title,
             content: note.content
         }
@@ -178,6 +184,7 @@ function NoteApp() {
             {
                 type: "add",
                 id: newNote.id,
+                date: newNote.date,
                 title: newNote.title,
                 content: newNote.content,
             })
@@ -221,7 +228,9 @@ function NoteApp() {
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
             </label>
             <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
-            <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}}/>
+            <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
+            content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} 
+            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={date.toLocaleDateString()}/>
 
             <button className='add-note-btn' onClick={handleAddClick}>
                 +
@@ -245,7 +254,8 @@ function NoteApp() {
                         )
                         :
                         notes.map( (note) =>
-                            <Note key={note.id} id={note.id} title={note.title} content={note.content} onEdit={handlEditClick} onDelete={handleDeleteClick} />
+                            <Note key={note.id} id={note.id} title={note.title} content={note.content} date={note.date}
+                            onEdit={handlEditClick} onDelete={handleDeleteClick} />
                         )
                     }
                 </div>
