@@ -10,8 +10,7 @@ function noteReducer(notes, action) {
             console.log(`note added. ID: ${action.id}`);
            return [...notes, {
             id: action.id,
-            date: action.date,
-            title: action.title,
+            createdOn: action.createdOn,
             content: action.content,
            }];
         }
@@ -22,7 +21,8 @@ function noteReducer(notes, action) {
                     return note = {
                         ...note,
                         title: action.title,
-                        content: action.content
+                        content: action.content,
+                        lastEdited: action.lastEdited
                     }
                 }
                 else {
@@ -60,7 +60,7 @@ function DelPopup({isOpen, onYes, onNo}) {
     )
 }
 
-function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, action}) {
+function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onClose, action}) {
     let [newTitle, setNewTitle] = useState(title);
     let [newContent, setNewContent] = useState(content);
 
@@ -69,13 +69,13 @@ function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, 
     }
 
     function handleSave() {
-        onSave({title: newTitle, content: newContent, date: date});
+        onSave({title: newTitle, content: newContent, createdOn: date +" ("+ time+")",});
         setNewTitle();
         setNewContent();
     }
 
     function handleEdit() {
-        onEdit({id: id, title: newTitle, content: newContent});
+        onEdit({id: id, title: newTitle, content: newContent, lastEdited: date +" ("+ time+")"});
         setNewTitle();
         setNewContent();
     }
@@ -88,7 +88,7 @@ function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, 
         <div className='popup-div'>
             <div className='popup'>
                 <div style={{display:"flex", margin:"5px 0px", justifyContent:"flex-end"}}>
-                    <span onClick={e=> {e.stopPropagation; handleClose()}} style={{cursor:"pointer"}}><box-icon name="x" size="m" color="#ffffff"></box-icon></span>
+                    <span onClick={e=> {e.stopPropagation(); handleClose()}} style={{cursor:"pointer"}}><box-icon name="x" size="m" color="#ffffff"></box-icon></span>
                 </div>
                 <b>Date: {date}</b> <br/>
                 <b>Title:</b> <br/>
@@ -101,7 +101,7 @@ function PopUp({isOpen, id=null, date, title, content, onSave, onEdit, onClose, 
     )
 }
 
-function Note({id, date, title, content, onEdit, onDelete}) {
+function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
     function editClick() {
         onEdit(id,title, content)
     }
@@ -119,7 +119,8 @@ function Note({id, date, title, content, onEdit, onDelete}) {
             </div>
 
             <div className='note-text'>
-                <p style={{color:'lightgray',fontSize:'17px'}}>{date}</p>
+                <p style={{color:'lightgray',fontSize:'17px'}}>{createdOn}</p>
+                {lastEdited && <p style={{color:'lightgray',fontSize:'17px'}}>last edit: {lastEdited}</p>}
                 <h2 className='note-title' style={{textDecoration:"underline", marginBottom:"15px"}}>{title}</h2> 
                 <p style={{whiteSpace:'pre-wrap'}}>{content}</p>
             </div>
@@ -136,10 +137,10 @@ function NoteApp() {
     const initialNotes=[
         {
             id: 0,
-            date: date.toLocaleDateString(),
+            createdOn: date.toLocaleDateString()+" ("+date.toLocaleTimeString()+")",
             title:"Intro",
             content: "Hello User, this is a new note taking app. "+
-            "Press the + icon to add a new note. You can also edit and delete a note by clicking the ... menu"
+            "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note."
         }
     ]
 
@@ -175,9 +176,7 @@ function NoteApp() {
     function handleAddNotes(note) {
         const newNote = {
             id: nextId,
-            date: note.date,
-            title: note.title,
-            content: note.content
+            ...note
         }
         setShowPopup(false);
 
@@ -185,7 +184,7 @@ function NoteApp() {
             {
                 type: "add",
                 id: newNote.id,
-                date: newNote.date,
+                createdOn: newNote.createdOn,
                 title: newNote.title,
                 content: newNote.content,
             })
@@ -198,7 +197,8 @@ function NoteApp() {
                 type: "edit",
                 id: note.id,
                 title: note.title,
-                content: note.content
+                content: note.content,
+                lastEdited: note.lastEdited
             }
         )
         setSelectedNote();
@@ -223,6 +223,8 @@ function NoteApp() {
         localStorage.clear();
         location.reload();
     }
+
+    setInterval(()=>{setDate(new Date())},1000)
     
     return ( 
 
@@ -232,7 +234,7 @@ function NoteApp() {
                 <button className='reset-btn' onClick={handleReset}>Reset App</button>
             </div>
 
-            <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day}</h3>
+            <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
             <label className='search-wrapper'>
                 <input type='text' placeholder='Search a note title' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
@@ -240,7 +242,7 @@ function NoteApp() {
             <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
             <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
             content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} 
-            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={date.toLocaleDateString()}/>
+            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={date.toLocaleDateString()} time={date.toLocaleTimeString()}/>
 
             <button className='add-note-btn' onClick={handleAddClick}>
                 +
@@ -264,8 +266,8 @@ function NoteApp() {
                         )
                         :
                         notes.map( (note) =>
-                            <Note key={note.id} id={note.id} title={note.title} content={note.content} date={note.date}
-                            onEdit={handlEditClick} onDelete={handleDeleteClick} />
+                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                        lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} />
                         )
                     }
                 </div>
