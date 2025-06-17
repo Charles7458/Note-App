@@ -11,6 +11,7 @@ function noteReducer(notes, action) {
            return [...notes, {
             id: action.id,
             createdOn: action.createdOn,
+            title: action.title,
             content: action.content,
            }];
         }
