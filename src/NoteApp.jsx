@@ -232,7 +232,7 @@ function NoteApp() {
         <div className='NoteApp'>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'100%'}}>
                 <h1 className='heading'>Note App</h1>
-                <button className='reset-btn' onClick={handleReset}>Reset App</button>
+                <button className='reset-btn' onClick={handleReset}>Reset</button>
             </div>
 
             <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
