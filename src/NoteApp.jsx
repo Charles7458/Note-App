@@ -1,4 +1,5 @@
-import { useState, useReducer, useMemo, useEffect } from 'react';
+import { memo, useState, useReducer, useMemo, useEffect } from 'react';
+
 import ReactDOM from 'react-dom'
 import './styles/NoteApp.css'
 // features:
@@ -138,7 +139,7 @@ if(show){
                     
                 </div>
                 <p className='details'>created: {createdOn}</p>
-                <p className='details'>last edit: {lastEdited}</p>
+                {lastEdited && <p className='details'>last edit: {lastEdited}</p>}
                 
                 <p className='zn-para'>{content}</p>
             </div>
@@ -150,7 +151,7 @@ if(show){
     }
 }
 
-function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
+const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
     const [showNote, setShowNote] = useState(false);
     function editClick() {
         onEdit(id,title, content)
@@ -178,19 +179,32 @@ function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
             </div>
         </div>
     )
-}
+})
 
-
-function NoteApp() {
-
+function Clock() {
     const [date, setDate] = useState(new Date());
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const day = days[date.getDay()];
 
+    useEffect(()=>{
+        const interval = setInterval(()=> setDate(new Date()),1000);
+        return ()=>clearInterval(interval)
+    },[])
+    
+
+    return(
+            <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
+    )
+}
+
+function NoteApp() {
+
+    
+
     const initialNotes=[
         {
             id: 0,
-            createdOn: date.toLocaleDateString()+" ("+date.toLocaleTimeString()+")",
+            createdOn: new Date().toLocaleDateString()+" ("+new Date().toLocaleTimeString()+")",
             title:"Intro",
             content: "Hello User, this is a new note taking app. "+
             "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note."
@@ -277,7 +291,6 @@ function NoteApp() {
         location.reload();
     }
 
-    setInterval(()=>{setDate(new Date())},1000)
 
     return ( 
 
@@ -286,8 +299,7 @@ function NoteApp() {
                 <h1 className='heading'>Note App</h1>
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
             </div>
-
-            <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
+            <Clock />
             <label className='search-wrapper'>
                 <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
@@ -295,7 +307,7 @@ function NoteApp() {
             <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
             <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
             content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} 
-            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={date.toLocaleDateString()} time={date.toLocaleTimeString()}/>
+            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={ new Date().toLocaleDateString()} time={ new Date().toLocaleTimeString()}/>
 
             <button className='add-note-btn' onClick={handleAddClick}>
                 +
@@ -308,16 +320,18 @@ function NoteApp() {
                     {
                         search.length > 0 ? 
                         
-                        notes.map( (note) =>
+                        notes.filter( (note) =>
                         {   
                             let title = `${note.title}`.toLowerCase();
                             let content = `${note.content}`.toLowerCase();
                             let searchText = search.toLowerCase();
-                            if(title.includes(searchText)||content.includes(searchText)){
-                                return <Note key={note.id} id={note.id} title={note.title} content={note.content} onEdit={handlEditClick} onDelete={handleDeleteClick} />
-                            }
-                        }
+                            return title.includes(searchText) || content.includes(searchText)
+                        })
+                        .map( (note) =>
+                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                                lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} />
                         )
+
                         :
                         notes.map( (note) =>
                             <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
