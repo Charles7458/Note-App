@@ -38,44 +38,6 @@ body {
     row-gap: 30px;
 }
 
-.note {
-    /* min-height: 320px; */
-    height: fit-content;
-    max-height: 400px;
-    width: clamp(200px, 26vw, 400px);
-    padding: 25px 20px;
-    background-color: rgb(26, 26, 26);
-    border-radius: 10px;
-    cursor:pointer;
-    /* margin: 20px; */
-}
-
-.note-head {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.note-title {
-    font-size: 20px;
-    font-family: Montserrat, 'Times New Roman';
-}
-
-.note:hover .note-title{
-    text-decoration: underline;
-}
-
-.note-para {
-    line-height: 30px;
-    text-indent: 30px;
-    white-space: pre-wrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-}
 
 .add-note-btn {
     height: clamp(25px, 9vw, 70px);
@@ -196,68 +158,7 @@ body {
     cursor: pointer;
 }
 
-.zn-backdrop{
-    position: fixed;
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    z-index: 2;
-    top:0;
-    left:0;
-    backdrop-filter: blur(20px);
-    cursor: default;
-    justify-content: center;
-    align-items: center;
-}
 
-.zoomed-note {
-    position: fixed;
-    height: 80vh;
-    width: 75vw;
-    border-radius: 20px;
-    padding: 20px;
-    background-color: rgb(51, 51, 51);
-    max-width: 700px;
-    z-index: 2;
-    color: white;
-}
-
-.zn-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.details {
-    color: gray;
-    font-size: 15px;
-}
-
-.options-btn{
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    /* color: white; */
-}
-
-.zn-para {
-    margin-top: 20px;
-    line-height: 30px;
-    white-space:pre-wrap;
-}
-
-.option-div {
-    position: fixed;
-    border-radius: 5px;
-    background-color: gray;
-    width: 100px;
-}
-
-.options {
-    text-align: center;
-    padding: 10px 0px;
-
-}
 @media (max-width: 800px) {
     .notes {
         grid-template-columns: 1fr 1fr;
