@@ -1,5 +1,6 @@
 * {
     z-index: 1;
+    font-family: Roboto, sans-serif;
 }
 
 body {
@@ -30,7 +31,7 @@ body {
     justify-content: start;
     grid-template-columns: 1fr 1fr 1fr;
     background-color: rgb(42, 41, 41);
-    padding: 30px;
+    padding: 20px;
     border-radius: 20px;
     overflow-x: hidden;
     column-gap: 30px;
@@ -38,12 +39,14 @@ body {
 }
 
 .note {
-    min-height: 300px;
+    /* min-height: 320px; */
     height: fit-content;
+    max-height: 400px;
     width: clamp(200px, 26vw, 400px);
-    padding: 20px;
+    padding: 25px 20px;
     background-color: rgb(26, 26, 26);
     border-radius: 10px;
+    cursor:pointer;
     /* margin: 20px; */
 }
 
@@ -54,8 +57,23 @@ body {
     margin-bottom: 10px;
 }
 
-.note-text {
-    font-size: clamp(15px, 2vw, 23px);
+.note-title {
+    font-size: 20px;
+    font-family: Montserrat, 'Times New Roman';
+}
+
+.note:hover .note-title{
+    text-decoration: underline;
+}
+
+.note-para {
+    line-height: 30px;
+    text-indent: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
 }
 
 .add-note-btn {
@@ -71,7 +89,7 @@ body {
 
 .popup-div {
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     z-index: 2;
     backdrop-filter: blur(20px);
     display: flex;
@@ -163,7 +181,7 @@ body {
     height: clamp(30px, 2vw, 60px);
     padding-left: clamp(10px,1vw, 20px);
     padding-right: clamp(10px,1vw, 20px);
-    width: clamp(150px, 15vw, 200px);
+    width: clamp(150px, 15vw, 300px);
     border-radius: 20px;
     text-overflow: ellipsis;
 }
@@ -175,6 +193,63 @@ body {
     cursor: pointer;
 }
 
+.zn-backdrop{
+    position: fixed;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+    top:0;
+    left:0;
+    backdrop-filter: blur(20px);
+    cursor: default;
+    justify-content: center;
+    align-items: center;
+}
+
+.zoomed-note {
+    height: 80vh;
+    width: 75vw;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: rgb(51, 51, 51);
+    max-width: 700px;
+}
+
+.zn-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.details {
+    color: gray;
+    font-size: 15px;
+}
+
+.options-btn{
+    border: none;
+    background-color: transparent;
+    /* color: white; */
+}
+
+.zn-para {
+    margin-top: 20px;
+    line-height: 30px;
+}
+
+.option-div {
+    position: fixed;
+    border-radius: 5px;
+    background-color: gray;
+    width: 100px;
+}
+
+.options {
+    text-align: center;
+    padding: 10px 0px;
+
+}
 @media (max-width: 800px) {
     .notes {
         grid-template-columns: 1fr 1fr;

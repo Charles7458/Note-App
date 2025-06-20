@@ -48,8 +48,8 @@ function DelPopup({isOpen, onYes, onNo}) {
         return null;
     }
     return (
-        <div className='popup-div'>
-            <div className='smol-popup'>
+        <div className='popup-div' onClick={onNo}>
+            <div className='smol-popup' onClick={e=>e.stopPropagation()}>
                 <h3>Are you sure you want to delete this note?</h3>
                 <div style={{display:"flex", width:"100%", justifyContent:"space-evenly", margin:"30px 0px 20px 0px"}}>
                     <button style={{backgroundColor:"lightcoral", color:"red", padding:"10px 30px", borderRadius:"10px", cursor:"pointer"}} onClick={onYes}> YES</button>
@@ -102,7 +102,52 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
     )
 }
 
+function Options({children}){
+    return(
+        <div className='option-div'>
+            {children}
+        </div>
+    )
+}
+
+function ZoomedNote({show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete}){
+    const [showOptions, setShowOptions] = useState(false)
+if(show){
+    return(
+        <div className='zn-backdrop'  onClick={e=>{e.stopPropagation();onHide()}}>
+            <div className='zoomed-note' onClick={e=>{e.stopPropagation();setShowOptions(false)}}>
+                <div className='zn-header'>{/*header */}
+                    <h1>{title}</h1>
+                    <div>
+                        <button className='options-btn' onClick={e=>{e.stopPropagation();setShowOptions(!showOptions)}}>
+                        <box-icon name='dots-horizontal-rounded' color='#ffffff'></box-icon>
+                    </button>
+                    {
+                        showOptions &&
+                        <Options>
+                            <p className='options' onClick={onEdit}>Edit</p>
+                            <hr style={{justifySelf:'center',width:'80%'}}></hr>
+                            <p className='options' style={{color:'red'}} onClick={onDelete}>Delete</p>
+                        </Options>
+                    }
+                    
+                    </div>
+                    
+                </div>
+                <p className='details'>created: {createdOn}</p>
+                <p className='details'>last edit: {lastEdited}</p>
+                
+                <p className='zn-para'>{content}</p>
+            </div>
+        </div>
+    )}
+    else{
+        return null;
+    }
+}
+
 function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
+    const [showNote, setShowNote] = useState(false);
     function editClick() {
         onEdit(id,title, content)
     }
@@ -112,22 +157,25 @@ function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
     }
 
     return (
-        <div className='note'>
-
+        <div className='note' onClick={()=>setShowNote(true)}>
+           
+            <ZoomedNote show={showNote} onHide={()=>setShowNote(false)} title={title} content={content} lastEdited={lastEdited} createdOn={createdOn}
+                onEdit={editClick} onDelete={deleteClick}/>
+            
             <div className='note-head'>
                 <span onClick={editClick} style={{cursor:"pointer"}}><box-icon type='solid' name='edit' color='#ffffff'></box-icon></span>
                 <span onClick={deleteClick} style={{cursor:"pointer"}}><box-icon type='solid' name='x-square' color='#ffffff'></box-icon></span>
             </div>
 
             <div className='note-text'>
-                <p style={{color:'lightgray',fontSize:'17px'}}>{createdOn}</p>
-                {lastEdited && <p style={{color:'lightgray',fontSize:'17px'}}>last edit: {lastEdited}</p>}
-                <h2 className='note-title' style={{textDecoration:"underline", marginBottom:"15px"}}>{title}</h2> 
-                <p style={{whiteSpace:'pre-wrap'}}>{content}</p>
+                <p style={{color:'lightgray',fontSize:'12px'}}>last edit: {lastEdited||createdOn}</p>
+                <h4 className='note-title' style={{marginBottom:"15px"}}>{title}</h4> 
+                <p className='note-para'>{content}</p>
             </div>
         </div>
     )
 }
+
 
 function NoteApp() {
 
@@ -226,7 +274,7 @@ function NoteApp() {
     }
 
     setInterval(()=>{setDate(new Date())},1000)
-    
+
     return ( 
 
         <div className='NoteApp'>
@@ -237,7 +285,7 @@ function NoteApp() {
 
             <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
             <label className='search-wrapper'>
-                <input type='text' placeholder='Search a note title' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
+                <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
             </label>
             <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
@@ -259,8 +307,9 @@ function NoteApp() {
                         notes.map( (note) =>
                         {   
                             let title = `${note.title}`.toLowerCase();
+                            let content = `${note.content}`.toLowerCase();
                             let searchText = search.toLowerCase();
-                            if(title.includes(searchText)){
+                            if(title.includes(searchText)||content.includes(searchText)){
                                 return <Note key={note.id} id={note.id} title={note.title} content={note.content} onEdit={handlEditClick} onDelete={handleDeleteClick} />
                             }
                         }
