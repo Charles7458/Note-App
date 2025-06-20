@@ -1,4 +1,5 @@
 import { useState, useReducer, useMemo, useEffect } from 'react';
+import ReactDOM from 'react-dom'
 import './styles/NoteApp.css'
 // features:
 //1. Add notes. 2. edit note. 3. delete a note. 4.search based on title of note
@@ -47,7 +48,7 @@ function DelPopup({isOpen, onYes, onNo}) {
     if(!isOpen){
         return null;
     }
-    return (
+    return ReactDOM.createPortal(
         <div className='popup-div' onClick={onNo}>
             <div className='smol-popup' onClick={e=>e.stopPropagation()}>
                 <h3>Are you sure you want to delete this note?</h3>
@@ -57,7 +58,8 @@ function DelPopup({isOpen, onYes, onNo}) {
                 </div>
 
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 
@@ -85,7 +87,7 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
         onClose()
     }
 
-    return(
+    return ReactDOM.createPortal(
         <div className='popup-div'>
             <div className='popup'>
                 <div style={{display:"flex", margin:"5px 0px", justifyContent:"flex-end"}}>
@@ -98,7 +100,8 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
                 <textarea  value={newContent} onChange={e => setNewContent(e.target.value)} className='content-input'></textarea>
                 <button className='save-note btn' onClick={action=="edit" ? handleEdit : handleSave}> {action=="edit" ? "Edit Note": "Save Note"}</button>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 
@@ -113,7 +116,7 @@ function Options({children}){
 function ZoomedNote({show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete}){
     const [showOptions, setShowOptions] = useState(false)
 if(show){
-    return(
+    return ReactDOM.createPortal(
         <div className='zn-backdrop'  onClick={e=>{e.stopPropagation();onHide()}}>
             <div className='zoomed-note' onClick={e=>{e.stopPropagation();setShowOptions(false)}}>
                 <div className='zn-header'>{/*header */}
@@ -139,7 +142,8 @@ if(show){
                 
                 <p className='zn-para'>{content}</p>
             </div>
-        </div>
+        </div>,
+        document.body
     )}
     else{
         return null;
@@ -163,8 +167,8 @@ function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
                 onEdit={editClick} onDelete={deleteClick}/>
             
             <div className='note-head'>
-                <span onClick={editClick} style={{cursor:"pointer"}}><box-icon type='solid' name='edit' color='#ffffff'></box-icon></span>
-                <span onClick={deleteClick} style={{cursor:"pointer"}}><box-icon type='solid' name='x-square' color='#ffffff'></box-icon></span>
+                <span onClick={e=>{e.stopPropagation();editClick()}} style={{cursor:"pointer"}}><box-icon type='solid' name='edit' color='#ffffff'></box-icon></span>
+                <span onClick={e=>{e.stopPropagation();deleteClick()}} style={{cursor:"pointer"}}><box-icon type='solid' name='x-square' color='#ffffff'></box-icon></span>
             </div>
 
             <div className='note-text'>
