@@ -56,7 +56,7 @@
 
 .zoomed-note {
     position: fixed;
-    height: 80vh;
+    max-height: 80vh;
     width: 75vw;
     border-radius: 20px;
     padding: 20px;
@@ -122,8 +122,8 @@
 
 @media (max-width:470px) {
     .zoomed-note {
-        height: 70vh;
-        width: 50vw;
+        max-height: 65vh;
+        width: 80vw;
     }
 
     .note {
