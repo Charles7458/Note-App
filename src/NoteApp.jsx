@@ -46,14 +46,14 @@ function noteReducer(notes, action) {
     }
 }
 
-function DelPopup({isOpen, onYes, onNo}) {
+function YesNoPopup({isOpen, onYes, onNo, message}) {
     if(!isOpen){
         return null;
     }
     return ReactDOM.createPortal(
         <div className='popup-div' onClick={onNo}>
             <div className='smol-popup' onClick={e=>e.stopPropagation()}>
-                <h3>Are you sure you want to delete this note?</h3>
+                <h3 style={{whiteSpace:'pre-wrap'}}>{message}</h3>
                 <div style={{display:"flex", width:"100%", justifyContent:"space-evenly", margin:"30px 0px 20px 0px"}}>
                     <button style={{backgroundColor:"lightcoral", color:"red", padding:"10px 30px", borderRadius:"10px", cursor:"pointer"}} onClick={onYes}> YES</button>
                     <button style={{backgroundColor:"lightgreen", color:"green", padding:"10px 30px", borderRadius:"10px", cursor:"pointer"}} onClick={onNo} > NO</button>
@@ -142,12 +142,14 @@ function NoteApp() {
     const nextId = notes.length;
     const [showPopup, setShowPopup] = useState(false);
     const [showDelPopup, setShowDelPopup] = useState(false);
+    const [showResetPopup, setShowResetPopup] = useState(false);
     const [selectedNote, setSelectedNote] = useState();
     const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : undefined), [selectedNote]) ;
     const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : undefined) ,[selectedNote]) ;
     const [search, setSearch] = useState("");
     const [searchText, setSearchText] = useState("");
-    
+    const delNoteMessage = "Are you sure, you want to delete this note?"
+    const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
 
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
@@ -224,14 +226,15 @@ function NoteApp() {
         <div className='NoteApp'>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'100%'}}>
                 <h1 className='heading'>Note App</h1>
-                <button className='reset-btn' onClick={handleReset}>Reset</button>
+                <button className='reset-btn' onClick={()=>setShowResetPopup(true)}>Reset</button>
             </div>
             <Clock />
             <label className='search-wrapper'>
                 <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
             </label>
-            <DelPopup isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/>
+            <YesNoPopup message={delNoteMessage} isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
+            <YesNoPopup message={resetMessage} isOpen={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
             <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
             content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} 
             onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={ new Date().toLocaleDateString()} time={ new Date().toLocaleTimeString()}/>

@@ -2,11 +2,12 @@
     /* min-height: 320px; */
     height: fit-content;
     max-height: 400px;
-    width: clamp(200px, 26vw, 400px);
+    width: clamp(180px, 26vw, 400px);
     padding: 25px 20px;
     background-color: rgb(26, 26, 26);
     border-radius: 10px;
     cursor:pointer;
+    justify-self: center;
     /* margin: 20px; */
 }
 
@@ -35,6 +36,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
+    font-size: clamp(13px, 1vw, 15px)
 }
 
 .zn-backdrop{
@@ -115,5 +117,36 @@
 .options {
     text-align: center;
     padding: 10px 0px;
+}
 
+
+@media (max-width:470px) {
+    .zoomed-note {
+        height: 70vh;
+        width: 50vh;
+    }
+
+    .note {
+        background-color: rgb(42, 41, 41);
+        padding: 15px;
+    }
+
+    .note-para{
+        -webkit-line-clamp: 4;
+    }
+}
+
+@media (max-width:380px) {
+    
+    .note {
+        height: 250px;
+        width: 160px;
+    }
+}
+
+@media (max-width:360px) {
+    .note {
+        width: 80%;
+        height: 300px;
+    }
 }

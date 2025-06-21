@@ -174,8 +174,24 @@ body {
         padding: 20px;
     }
     .notes {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        width: 100vw;
+        padding: 10px;
+        column-gap: 15px;
+        background-color: transparent;
     }
 
     
+}
+
+@media (max-width:380px) {
+    .notes {
+        column-gap: 0px;
+    }
+}
+
+@media (max-width: 360px) {
+    .notes {
+        grid-template-columns: 1fr;
+    }
 }
