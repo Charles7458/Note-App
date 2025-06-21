@@ -123,7 +123,7 @@
 @media (max-width:470px) {
     .zoomed-note {
         height: 70vh;
-        width: 50vh;
+        width: 50vw;
     }
 
     .note {
