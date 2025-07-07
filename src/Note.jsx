@@ -2,9 +2,12 @@ import { memo, useEffect, useState } from "react";
 import ReactDOM from 'react-dom';
 import './styles/Note.css'
 
-function ZoomedNote({id, show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete, pinned, handlePin, handleUnpin}){
+function ZoomedNote({show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete, pinned, handlePin, handleUnpin}){
     const [showOptions, setShowOptions] = useState(false)
-    
+    function handleHide() {
+        setShowOptions(false);
+        onHide();
+    }
     useEffect(()=>{
         if(show){
             document.body.style.overflowY='hidden'
@@ -16,23 +19,26 @@ function ZoomedNote({id, show, onHide, title, content, lastEdited, createdOn, on
 
     if(show){
         return ReactDOM.createPortal(
-            <div className='zn-backdrop'  onClick={e=>{e.stopPropagation();onHide()}}>
+            <div className='zn-backdrop'  onClick={e=>{e.stopPropagation();handleHide()}}>
                 <div className='zoomed-note' onClick={e=>{e.stopPropagation();setShowOptions(false)}}>
                     <div className='zn-header'>{/*header */}
                         <h1>{title}</h1>
                         <div>
-                            <button className='options-btn' onClick={e=>{e.stopPropagation();setShowOptions(!showOptions)}}>
-                            <box-icon name='dots-horizontal-rounded' color='#ffffff'></box-icon>
-                        </button>
+                           {!showOptions && <button className='options-btn' onClick={e=>{e.stopPropagation();setShowOptions(!showOptions)}}>
+                                <i className="fa-solid fa-ellipsis fa-lg" style={{color:'white'}}></i>
+                            </button> }
                         {
                             showOptions &&
-                            <Options>
-                                <p className="options" onClick={pinned ? handleUnpin : handlePin}>{pinned ? 'Unpin': 'Pin'}</p>
-                                <hr style={{justifySelf:'center',width:'80%'}}></hr>
-                                <p className='options' onClick={onEdit}>Edit</p>
-                                <hr style={{justifySelf:'center',width:'80%'}}></hr>
-                                <p className='options' style={{color:'red'}} onClick={onDelete}>Delete</p>
-                            </Options>
+                            <div className="option-tray">
+                                <i className={pinned ? "options fa-solid fa-thumbtack-slash": "options fa-solid fa-thumbtack"} title={pinned ? 'Unpin': 'Pin'}
+                                    onClick={pinned ? handleUnpin : handlePin}></i>
+
+                                <i className='options fa-solid fa-pen-to-square' onClick={onEdit} title="Edit"></i>
+
+                                <i className='options fa-solid fa-trash' onClick={onDelete}></i>
+
+                                <i className="options fa-solid fa-xmark" onClick={()=>setShowOptions(false)}style={{marginLeft:'20px'}}></i>
+                            </div>
                         }
 
                         </div>
@@ -51,14 +57,6 @@ function ZoomedNote({id, show, onHide, title, content, lastEdited, createdOn, on
     }
 }
 
-function Options({children}){
-    return(
-        <div className='option-div'>
-            {children}
-        </div>
-    )
-}
-
 
 const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete, pinned, onPin, onUnpin}) {
     const [showNote, setShowNote] = useState(false);
@@ -73,12 +71,12 @@ const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEd
     return (
         <div className='note' onClick={()=>setShowNote(true)}>
            
-            <ZoomedNote id={id} show={showNote} onHide={()=>setShowNote(false)} title={title} content={content} lastEdited={lastEdited} createdOn={createdOn}
+            <ZoomedNote show={showNote} onHide={()=>setShowNote(false)} title={title} content={content} lastEdited={lastEdited} createdOn={createdOn}
                 onEdit={editClick} onDelete={deleteClick} pinned={pinned} handlePin={onPin} handleUnpin={onUnpin}/>
             
             <div className='note-head'>
-                <span onClick={e=>{e.stopPropagation();editClick()}} style={{cursor:"pointer"}}><box-icon type='solid' name='edit' color='#ffffff'></box-icon></span>
-                <span onClick={e=>{e.stopPropagation();deleteClick()}} style={{cursor:"pointer"}}><box-icon type='solid' name='x-square' color='#ffffff'></box-icon></span>
+                <span onClick={e=>{e.stopPropagation();pinned ? onUnpin() : onPin()}} style={{cursor:"pointer",padding:'5px'}}><i className={pinned ? "fa-solid fa-thumbtack-slash": "fa-solid fa-thumbtack"}></i></span>
+                <span onClick={e=>{e.stopPropagation();deleteClick()}} style={{cursor:"pointer",padding:'5px'}}><i className="fa-solid fa-trash"></i></span>
             </div>
 
             <div className='note-text'>

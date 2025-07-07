@@ -27,6 +27,8 @@ body {
 
 .notes {
     display: grid;
+    min-height: 200px;
+    width: 100%;
     justify-self: center;
     justify-content: start;
     grid-template-columns: 1fr 1fr 1fr;
@@ -144,20 +146,22 @@ body {
 
 .search {
     height: clamp(30px, 2vw, 60px);
+    font-size: 18px;
+    padding-block: 15px;
     padding-left: clamp(10px,1vw, 20px);
     padding-right: clamp(10px,1vw, 20px);
     width: clamp(150px, 15vw, 300px);
     border-radius: 20px;
     text-overflow: ellipsis;
+    margin-block-start: 20px;
 }
 
-.clear-btn {
-    position: relative;
-    top: 8px;
-    right: 30px;
-    cursor: pointer;
+.pinned-wrapper {
+    background-color: rgb(42, 41, 41);
+    padding: 30px auto;
+    border-radius: 20px;
+    margin-bottom: 30px;
 }
-
 
 @media (max-width: 800px) {
     .notes {
@@ -181,7 +185,13 @@ body {
         background-color: transparent;
     }
 
-    
+    .pinned-wrapper{
+        height: fit-content;
+        padding-bottom: 0px;
+        border-radius: 0px;
+        border-bottom: 1px solid rgb(152, 152, 152);
+        background-color: transparent;
+    }
 }
 
 @media (max-width:380px) {

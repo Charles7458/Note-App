@@ -112,7 +112,7 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
         <div className='popup-div'>
             <div className='popup'>
                 <div style={{display:"flex", margin:"5px 0px", justifyContent:"flex-end"}}>
-                    <span onClick={e=> {e.stopPropagation(); handleClose()}} style={{cursor:"pointer"}}><box-icon name="x" size="m" color="#ffffff"></box-icon></span>
+                    <span onClick={e=> {e.stopPropagation(); handleClose()}} style={{cursor:"pointer"}}><i className="fa-solid fa-xmark fa-lg" style={{color:'white'}}></i></span>
                 </div>
                 <b>Date: {date}</b> <br/>
                 <b>Title:</b> <br/>
@@ -283,11 +283,11 @@ function NoteApp() {
                 <h1 className='heading'>Note App</h1>
                 <button className='reset-btn' onClick={()=>setShowResetPopup(true)}>Reset</button>
             </div>
+
             <Clock />
-            <label className='search-wrapper'>
-                <input type='text' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
-                <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
-            </label>
+
+            <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
+
             <YesNoPopup message={delNoteMessage} isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
             <YesNoPopup message={resetMessage} isOpen={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
             <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
@@ -300,16 +300,22 @@ function NoteApp() {
 
             { (notes.length > 0) && 
 
+                <>
+                <div className='pinned-wrapper'>
+                    <h3 style={{padding:'20px'}}>Pinned</h3>
+                    <div className='notes'>
+                        {/* first mapping pinned notes */}
+                        {
+                            search.length===0 &&
+                            notes.filter((note)=> {return note.pinned}).map((note) =>
+                                <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                                lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
+                            )
+                        }
+                    </div>
+                </div>
+                
                 <div className='notes'>
-                    {/* first mapping pinned notes */}
-                    {
-                        search.length===0 &&
-                        notes.filter((note)=> {return note.pinned}).map((note) =>
-                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
-                            lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
-                        )
-                    }
-                    
                     {
                         search.length > 0 ? 
                         
@@ -336,6 +342,7 @@ function NoteApp() {
 
                     {/* <Checklist title='TO DO LIST' items={checklistItems}/> */}
                 </div>
+                </>
 
             }
 
