@@ -334,7 +334,7 @@ function NoteApp() {
 
                     }
 
-                    <Checklist title='TO DO LIST' items={checklistItems}/>
+                    {/* <Checklist title='TO DO LIST' items={checklistItems}/> */}
                 </div>
 
             }
