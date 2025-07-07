@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import ReactDOM from 'react-dom';
 import './styles/Note.css'
 
-function ZoomedNote({show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete}){
+function ZoomedNote({id, show, onHide, title, content, lastEdited, createdOn, onEdit, onDelete, pinned, handlePin, handleUnpin}){
     const [showOptions, setShowOptions] = useState(false)
     
     useEffect(()=>{
@@ -27,6 +27,8 @@ function ZoomedNote({show, onHide, title, content, lastEdited, createdOn, onEdit
                         {
                             showOptions &&
                             <Options>
+                                <p className="options" onClick={pinned ? handleUnpin : handlePin}>{pinned ? 'Unpin': 'Pin'}</p>
+                                <hr style={{justifySelf:'center',width:'80%'}}></hr>
                                 <p className='options' onClick={onEdit}>Edit</p>
                                 <hr style={{justifySelf:'center',width:'80%'}}></hr>
                                 <p className='options' style={{color:'red'}} onClick={onDelete}>Delete</p>
@@ -58,7 +60,7 @@ function Options({children}){
 }
 
 
-const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete}) {
+const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEdit, onDelete, pinned, onPin, onUnpin}) {
     const [showNote, setShowNote] = useState(false);
     function editClick() {
         onEdit(id,title, content)
@@ -67,12 +69,12 @@ const Note = memo(function Note({id, createdOn, lastEdited, title, content, onEd
     function deleteClick() {
         onDelete(id)
     }
-
+    
     return (
         <div className='note' onClick={()=>setShowNote(true)}>
            
-            <ZoomedNote show={showNote} onHide={()=>setShowNote(false)} title={title} content={content} lastEdited={lastEdited} createdOn={createdOn}
-                onEdit={editClick} onDelete={deleteClick}/>
+            <ZoomedNote id={id} show={showNote} onHide={()=>setShowNote(false)} title={title} content={content} lastEdited={lastEdited} createdOn={createdOn}
+                onEdit={editClick} onDelete={deleteClick} pinned={pinned} handlePin={onPin} handleUnpin={onUnpin}/>
             
             <div className='note-head'>
                 <span onClick={e=>{e.stopPropagation();editClick()}} style={{cursor:"pointer"}}><box-icon type='solid' name='edit' color='#ffffff'></box-icon></span>

@@ -3,9 +3,14 @@ import { memo, useState, useReducer, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom'
 import './styles/NoteApp.css'
 import Note from './Note';
+import Checklist from './Checklist';
 // features:
 //1. Add notes. 2. edit note. 3. delete a note. 4.search based on title of note
 
+function dateFormatter(date){
+    const today = date.toLocaleDateString;
+
+}
 function noteReducer(notes, action) {
     switch (action.type) {
         case 'add': 
@@ -16,6 +21,7 @@ function noteReducer(notes, action) {
             createdOn: action.createdOn,
             title: action.title,
             content: action.content,
+            pinned: false
            }];
         }
 
@@ -26,10 +32,23 @@ function noteReducer(notes, action) {
                         ...note,
                         title: action.title,
                         content: action.content,
-                        lastEdited: action.lastEdited
+                        lastEdited: action.lastEdited,
                     }
                 }
                 else {
+                    return note;
+                }
+            })
+        }
+
+        case 'pin': {
+            return notes.map((note)=> {
+                if (note.id === action.id) {
+                    return {
+                        ...note,
+                        pinned: action.pinned
+                    }
+                } else {
                     return note;
                 }
             })
@@ -120,7 +139,7 @@ function Clock() {
     
 
     return(
-            <h3 style={{color:"gray"}}>{date.toLocaleDateString()}, {day} {date.toLocaleTimeString()}</h3>
+            <h3 style={{color:"gray"}}>{date.toDateString()}, {day} {date.toLocaleTimeString()}</h3>
     )
 }
 
@@ -134,7 +153,8 @@ function NoteApp() {
             createdOn: new Date().toLocaleDateString()+" ("+new Date().toLocaleTimeString()+")",
             title:"Intro",
             content: "Hello User, this is a new note taking app. "+
-            "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note."
+            "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note.",
+            pinned: false
         }
     ]
 
@@ -151,8 +171,15 @@ function NoteApp() {
     const delNoteMessage = "Are you sure, you want to delete this note?"
     const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
 
+    // useEffect(()=>{
+    //     let mynotes = JSON.parse(localStorage.getItem("notes"));
+    //     let unpinnednotes = [mynotes.map((note)=> note={...note,pinned:false})]
+    //     localStorage.setItem("notes", JSON.stringify(unpinnednotes))
+    //     }
+    //     ,[])
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
+        console.log(notes)
     }, [notes]);
 
     function handleAddClick() {
@@ -210,17 +237,45 @@ function NoteApp() {
         )
         setSelectedNote();
     }
+    function handlePin(id) {
+        dispatch(
+            {
+                type: 'pin',
+                id: id,
+                pinned: true
+            }
+        )
+    }
 
-    function handleSearch() {
-        setSearch(searchText);
+    function handleUnpin(id) {
+        dispatch(
+            {
+                type: 'pin',
+                id: id,
+                pinned: false
+            }
+        )
     }
 
     function handleReset(){
         localStorage.clear();
         location.reload();
     }
+    const checklistItems = ['Finish notes app', 'implement checklist', 'meet Akshit'];
 
-
+    useEffect(()=>{
+        if(notes.length>1){
+        notes.map((note)=> {
+        if(note!=null && note.id!=null && note.pinned==null){
+        dispatch(
+        {
+            type: 'pin',
+            id: note.id,
+            pinned: false
+        })
+    }})
+}}
+,[notes])
     return ( 
 
         <div className='NoteApp'>
@@ -230,7 +285,7 @@ function NoteApp() {
             </div>
             <Clock />
             <label className='search-wrapper'>
-                <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
+                <input type='text' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
                 <span className='clear-btn' onClick={()=>setSearch("")}><box-icon name='x' size='sm'></box-icon></span>
             </label>
             <YesNoPopup message={delNoteMessage} isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
@@ -246,6 +301,14 @@ function NoteApp() {
             { (notes.length > 0) && 
 
                 <div className='notes'>
+                    {/* first mapping pinned notes */}
+                    {
+                        search.length===0 &&
+                        notes.filter((note)=> {return note.pinned}).map((note) =>
+                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                            lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
+                        )
+                    }
                     
                     {
                         search.length > 0 ? 
@@ -259,15 +322,19 @@ function NoteApp() {
                         })
                         .map( (note) =>
                             <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
-                                lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} />
+                                lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                         )
 
                         :
-                        notes.map( (note) =>
-                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
-                        lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} />
-                        )
+                            //then mapping unpinned notes
+                            notes.filter((note)=>{return !note.pinned}).map( (note) =>
+                                <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                            lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
+                            )
+
                     }
+
+                    <Checklist title='TO DO LIST' items={checklistItems}/>
                 </div>
 
             }

@@ -1,0 +1,23 @@
+.check-item-div{
+    display: flex;
+    margin: 20px auto;
+}
+
+.normal-check-text {
+    color:rgba(213, 213, 213, 0.91);
+    margin-inline-start: 20px;
+}
+
+.normal-check-text:hover{
+    color: white;
+}
+
+.striked-check-text {
+    color:rgba(213, 213, 213, 0.91);
+    margin-inline-start: 20px;
+    text-decoration: line-through;
+}
+
+.striked-check-text:hover{
+    color: white;
+}
