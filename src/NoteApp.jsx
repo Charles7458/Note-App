@@ -92,7 +92,7 @@ function NoteApp() {
         }
     ]
 
-    const [notes, dispatch] = useReducer(noteReducer, initialNotes);
+    const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
     const nextId = notes.length;
     const [showSettings, setShowSettings] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
