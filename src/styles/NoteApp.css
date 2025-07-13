@@ -168,6 +168,7 @@ body {
     padding: 20px;
     min-height: 200px;
     height: 45vh;
+    max-height: 45vh;
     min-width: 100%;
     max-width: 100%;
     /* resize: none; */
