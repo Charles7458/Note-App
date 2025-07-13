@@ -167,8 +167,7 @@ body {
     margin: 10px 0px;
     padding: 20px;
     min-height: 200px;
-    height: 200px;
-    max-height: 45vh;
+    height: 45vh;
     min-width: 100%;
     max-width: 100%;
     /* resize: none; */
