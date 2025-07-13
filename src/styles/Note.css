@@ -21,10 +21,11 @@
 .note-title {
     font-size: 20px;
     font-family: Montserrat, 'Times New Roman';
+    color: rgb(206, 206, 206);
 }
 
 .note:hover .note-title{
-    text-decoration: underline;
+    color: white;
 }
 
 .note-para {
@@ -86,7 +87,7 @@
 .zn-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .details {
@@ -108,27 +109,66 @@
 }
 
 .option-tray {
-    position: relative;
+    position: fixed;
     display: flex;
-    bottom: 0px;
+    right: 28vw;
+    flex-direction: column;
     column-gap: 20px;
     border-radius: 30px;
     padding: 10px;
-    background-color: gray;
+    background-color: rgb(74, 74, 74);
 }
 
 .options {
-    color: rgb(178, 178, 178);
-    padding: 5px;
+    color: rgb(232, 232, 232);
+    padding: 10px 10px;
+    border-radius: 40px;
 }
 
 .options:hover {
-    color: white;
+    background-color: rgba(115, 115, 115, 0.551);
     cursor:pointer;
 }
 
+.info-div {
+    background-color: rgb(51, 51, 51);
+    color: rgba(120, 120, 120, 0.773);
+    height: 40vh;
+    width: 50vw;
+    z-index: 5;
+    line-height: 40px;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.info {
+    display: block;
+    color: rgb(184, 178, 178);
+}
+
+.info:hover {
+    color: white;
+}
+
+
+@media (max-width:1027px) {
+    .option-tray{
+        right: 17vw;
+    }
+}
+
+@media (max-width:769px) {
+    .note-title {
+        color: white;
+    }
+
+    .option-tray{
+        right: 14vw;
+    }
+}
 
 @media (max-width:470px) {
+    
     .zoomed-note {
         top:20%;
         max-height: 65vh;
@@ -143,6 +183,10 @@
 
     .note-para{
         -webkit-line-clamp: 4;
+    }
+
+    .info {
+        color: white;
     }
 }
 

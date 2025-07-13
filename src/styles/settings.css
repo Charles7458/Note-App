@@ -1,0 +1,73 @@
+.settings-div{
+    width: clamp(200px,90vw,700px);
+    background-color: rgb(59, 59, 59);
+    color: white;
+    height: 70vh;
+    min-height: fit-content;
+    border-radius:15px;
+    padding: 20px;
+    /* padding-top: 10px; */
+}
+
+.format-input {
+    background-color: gray;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin: 0px;
+    color: white;
+    cursor: pointer;
+}
+
+.format-input::picker{
+    border-radius: 10px;
+    color: white;
+}
+
+.flex-items-center {
+    display: flex;
+    align-items: center;
+}
+
+.my-3 {
+    margin-block: 3rem;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+.reset-btn {
+    padding: 15px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: rgb(239, 47, 47);
+    color: white;
+    cursor:pointer;
+    border: none;
+}
+
+.reset-btn:hover {
+    background-color: red;
+    scale: 1.05;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    z-index: 5;
+}
+.dropdown {
+    position:fixed;
+    z-index: 5;
+    background-color: rgb(37, 37, 37);
+    border-radius: 10px;
+}
+
+.dropdown-option {
+    padding: 10px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.dropdown-option:hover {
+    background-color: gray;
+}

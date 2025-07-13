@@ -16,14 +16,30 @@ body {
     height: fit-content;
 }
 
-.NoteApp .heading {
-    display: block;
+.heading {
+    display: inline;
     width: fit-content;
-    padding: 15px 20px;
-    background-color: rgb(41, 57, 52);
-    border-radius: 5px;
-    margin-bottom: 50px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0px 0px 4px 1px rgb(127, 127, 127);
 }
+
+.settings {
+    display: block;
+    color: white;
+    padding: 20px 12px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.settings-icon:hover {
+    animation: rotate linear forwards 300ms;
+}
+
 
 .notes {
     display: grid;
@@ -42,25 +58,30 @@ body {
 
 
 .add-note-btn {
-    height: clamp(25px, 9vw, 70px);
-    width: clamp(25px, 9vw, 70px);
+    height: clamp(45px, 13vw, 70px);
+    width:  clamp(45px, 13vw, 70px);
     border-radius: 100px;
     display: block;
+    border: none;
     justify-self: center;
     margin: 30px 0px;
-    font-size: clamp(15px, 4vw, 30px);
+    font-size: clamp(15px, 5vw, 30px);
     cursor: pointer;
 }
 
+.add-note-btn:hover {
+    background-color: rgb(57, 57, 57);
+    color: white;
+}
 .popup-div {
     width: 100vw;
     height: 100vh;
     z-index: 4;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.592);
+    background-color: rgba(57, 57, 57, 0.285);
     position: fixed;
     top: 0;
     left: 0;
@@ -68,10 +89,12 @@ body {
 }
 
 .popup {
-    padding: 10px 20px 20px 20px;
-    height: 450px;
-    width: 400px;
-    background-color: gray;
+    padding: 20px;
+    padding-top: 10px;
+    min-height: 450px;
+    height: fit-content;
+    width: clamp(250px, 85vw, 400px);
+    background-color: rgb(37, 37, 37);
     color: white;
     border-radius: 10px;
     display: block;
@@ -80,51 +103,84 @@ body {
     top: 10%;
 }
 
+.popup-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: large;
+}
+
+.popup-btn:hover {
+    scale: 1.05;
+}
+
+.action-btn {
+    background-color: black;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: white;
+    color: black;
+}
+
 .btn {
     padding: 10px 20px;
-    background-color: rgb(40, 40, 40);
-    border: 2px solid rgb(40, 40, 40);
-    color: white;
+    background-color: white;
+    color: black;
     border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
 .btn:hover {
+    background-color: rgb(61, 61, 61);
+    color: white;
     border: 2px solid rgb(61, 61, 255);
 }
 
-.reset-btn {
-    margin-bottom: 20px;
-    background-color: rgb(255, 47, 47);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    font-size: 15px;
-}
-
-.reset-btn:hover {
-    background-color: rgb(215, 37, 37);
-}
 .save-note {
     display: block;
-    margin: 20px 0px;
+    margin-top: 20px;
     justify-self: center;
 }
 
 .title-input {
     margin: 10px 0px;
-    padding: 10px 20px;
+    padding: 20px 0px;
     width: 100%;
     border-radius: 10px;
     border: none;
+    font-size: 22px;
+    background-color: transparent;
+    color: white;
+}
+
+.title-input:focus {
+    border: none;
+    outline: none;
 }
 
 .content-input {
     margin: 10px 0px;
     padding: 20px;
+    min-height: 200px;
     height: 200px;
-    width: 100%;
-    resize: none;
+    max-height: 45vh;
+    min-width: 100%;
+    max-width: 100%;
+    /* resize: none; */
+    border:none;
+    background-color: rgb(54, 53, 53);
+    color: white;
+    border-radius:20px;
+    font-size:16px;
+}
+
+.content-input:focus {
+    outline:none;
 }
 
 .smol-popup{
@@ -133,8 +189,8 @@ body {
     z-index: 5;
     padding: 20px;
     height: fit-content;
-    width: 400px;
-    background-color: gray;
+    width: clamp(250px, 85vw, 400px);
+    background-color: rgb(54, 55, 58);
     color:white;
     border-radius: 30px;
     text-align: center;
@@ -163,9 +219,14 @@ body {
     margin-bottom: 30px;
 }
 
+@keyframes rotate {
+    100% {
+        transform: rotate(120deg);
+    }
+}
 @media (max-width: 800px) {
     .notes {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
     .note {
         width: clamp(200px, 40vw, 300px);
@@ -191,6 +252,10 @@ body {
         border-radius: 0px;
         border-bottom: 1px solid rgb(152, 152, 152);
         background-color: transparent;
+    }
+
+    .content-input {
+        padding: 20px 10px;
     }
 }
 

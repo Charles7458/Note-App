@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './styles/checklist.css'
+import { useState } from 'react';
+import '../styles/checklist.css'
 
 function CheckItem({content}){
     const [isChecked, setIsChecked] = useState(false);

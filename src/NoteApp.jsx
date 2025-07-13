@@ -1,72 +1,25 @@
 import { memo, useState, useReducer, useMemo, useEffect } from 'react';
-
+import noteReducer from './noteReducer';
 import ReactDOM from 'react-dom'
 import './styles/NoteApp.css'
-import Note from './Note';
-import Checklist from './Checklist';
-// features:
-//1. Add notes. 2. edit note. 3. delete a note. 4.search based on title of note
+import Clock from './components/Clock';
+import Note from './components/Note';
+import Checklist from './components/Checklist';
+import SettingPopup from './components/SettingPopup';
+/* features:
+    1. Add notes. 2. edit note. 3. delete a note. 4.search based on title of note
 
-function dateFormatter(date){
-    const today = date.toLocaleDateString;
+Date = {
+    date = 13,
+    month = 7,
+    year = 2025,
+    dateString = Sun 13 July 09:10:10 PM
+  }
 
-}
-function noteReducer(notes, action) {
-    switch (action.type) {
-        case 'add': 
-        {
-            console.log(`note added. ID: ${action.id}`);
-           return [...notes, {
-            id: action.id,
-            createdOn: action.createdOn,
-            title: action.title,
-            content: action.content,
-            pinned: false
-           }];
-        }
+*/
 
-        case 'edit': {
-            return notes.map( (note) => {
-                if (note.id === action.id) {
-                    return note = {
-                        ...note,
-                        title: action.title,
-                        content: action.content,
-                        lastEdited: action.lastEdited,
-                    }
-                }
-                else {
-                    return note;
-                }
-            })
-        }
-
-        case 'pin': {
-            return notes.map((note)=> {
-                if (note.id === action.id) {
-                    return {
-                        ...note,
-                        pinned: action.pinned
-                    }
-                } else {
-                    return note;
-                }
-            })
-        }
-
-        case 'delete': {
-            return notes.filter((note)=> note.id !== action.id)
-        }
-
-        default: {
-            alert("unidentified action");
-            return null;
-        }
-    }
-}
-
-function YesNoPopup({isOpen, onYes, onNo, message}) {
-    if(!isOpen){
+function YesNoPopup({show, onYes, onNo, message, action}) {
+    if(!show){
         return null;
     }
     return ReactDOM.createPortal(
@@ -74,8 +27,8 @@ function YesNoPopup({isOpen, onYes, onNo, message}) {
             <div className='smol-popup' onClick={e=>e.stopPropagation()}>
                 <h3 style={{whiteSpace:'pre-wrap'}}>{message}</h3>
                 <div style={{display:"flex", width:"100%", justifyContent:"space-evenly", margin:"30px 0px 20px 0px"}}>
-                    <button style={{backgroundColor:"lightcoral", color:"red", padding:"10px 30px", borderRadius:"10px", cursor:"pointer"}} onClick={onYes}> YES</button>
-                    <button style={{backgroundColor:"lightgreen", color:"green", padding:"10px 30px", borderRadius:"10px", cursor:"pointer"}} onClick={onNo} > NO</button>
+                    <button className='popup-btn action-btn' onClick={onYes}>{action}</button>
+                    <button className='popup-btn cancel-btn' onClick={onNo} >Cancel</button>
                 </div>
 
             </div>
@@ -84,22 +37,22 @@ function YesNoPopup({isOpen, onYes, onNo, message}) {
     )
 }
 
-function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onClose, action}) {
+function PopUp({show, id=null, date, dateFormat, title, content, onSave, onEdit, onClose, action}) {
     let [newTitle, setNewTitle] = useState(title);
     let [newContent, setNewContent] = useState(content);
-
-    if (!isOpen){
+    const dateString = dateFormat.replace("dd",date.date).replace("mm", date.month).replace("yyyy",date.year)
+    if (!show){
         return null;
     }
 
     function handleSave() {
-        onSave({title: newTitle, content: newContent, createdOn: date +" ("+ time+")",});
+        onSave({title: newTitle, content: newContent, createdOn: date });
         setNewTitle();
         setNewContent();
     }
 
     function handleEdit() {
-        onEdit({id: id, title: newTitle, content: newContent, lastEdited: date +" ("+ time+")"});
+        onEdit({id: id, title: newTitle, content: newContent, lastEdited: date });
         setNewTitle();
         setNewContent();
     }
@@ -114,11 +67,9 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
                 <div style={{display:"flex", margin:"5px 0px", justifyContent:"flex-end"}}>
                     <span onClick={e=> {e.stopPropagation(); handleClose()}} style={{cursor:"pointer"}}><i className="fa-solid fa-xmark fa-lg" style={{color:'white'}}></i></span>
                 </div>
-                <b>Date: {date}</b> <br/>
-                <b>Title:</b> <br/>
-                <input type='text' value={newTitle} onChange={e => setNewTitle(e.target.value)} className='title-input' /> <br />
-                <b>Content:</b> <br />
-                <textarea  value={newContent} onChange={e => setNewContent(e.target.value)} className='content-input'></textarea>
+                <b style={{marginRight:'20px', color:'gray'}}>Date: {dateString}</b> <br/>
+                <input type='text' value={newTitle} onChange={e => setNewTitle(e.target.value)} className='title-input' placeholder='Title' /> <br />
+                <textarea  value={newContent} onChange={e => setNewContent(e.target.value)} className='content-input' placeholder='Content'></textarea>
                 <button className='save-note btn' onClick={action=="edit" ? handleEdit : handleSave}> {action=="edit" ? "Edit Note": "Save Note"}</button>
             </div>
         </div>,
@@ -127,39 +78,23 @@ function PopUp({isOpen, id=null, date, time, title, content, onSave, onEdit, onC
 }
 
 
-function Clock() {
-    const [date, setDate] = useState(new Date());
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    const day = days[date.getDay()];
-
-    useEffect(()=>{
-        const interval = setInterval(()=> setDate(new Date()),1000);
-        return ()=>clearInterval(interval)
-    },[])
-    
-
-    return(
-            <h3 style={{color:"gray"}}>{date.toDateString()}, {day} {date.toLocaleTimeString()}</h3>
-    )
-}
-
 function NoteApp() {
 
-    
-
+    const now = new Date();
     const initialNotes=[
         {
             id: 0,
-            createdOn: new Date().toLocaleDateString()+" ("+new Date().toLocaleTimeString()+")",
+            createdOn: {date:now.getDate(), month: now.getMonth()+1, year: now.getFullYear(), datetime: `${now.toUTCString().substring(0,17)} | ${now.toLocaleTimeString()}`},
             title:"Intro",
-            content: "Hello User, this is a new note taking app. "+
+            content: "Hello User, this is a note taking app. "+
             "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note.",
             pinned: false
         }
     ]
 
-    const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
+    const [notes, dispatch] = useReducer(noteReducer, initialNotes);
     const nextId = notes.length;
+    const [showSettings, setShowSettings] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showDelPopup, setShowDelPopup] = useState(false);
     const [showResetPopup, setShowResetPopup] = useState(false);
@@ -167,20 +102,19 @@ function NoteApp() {
     const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : undefined), [selectedNote]) ;
     const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : undefined) ,[selectedNote]) ;
     const [search, setSearch] = useState("");
-    const [searchText, setSearchText] = useState("");
     const delNoteMessage = "Are you sure, you want to delete this note?"
     const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
+    const [dateFormat, setDateFormat] = useState("dd/mm/yyyy");
 
-    // useEffect(()=>{
-    //     let mynotes = JSON.parse(localStorage.getItem("notes"));
-    //     let unpinnednotes = [mynotes.map((note)=> note={...note,pinned:false})]
-    //     localStorage.setItem("notes", JSON.stringify(unpinnednotes))
-    //     }
-    //     ,[])
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
         console.log(notes)
     }, [notes]);
+
+    function generateDate(date){
+        return {date:date.getDate(), month: date.getMonth()+1, year: date.getFullYear(), 
+            datetime: `${date.toUTCString().substring(0,17)} | ${date.toLocaleTimeString()}`}
+    }
 
     function handleAddClick() {
         setShowPopup(true);
@@ -261,38 +195,26 @@ function NoteApp() {
         localStorage.clear();
         location.reload();
     }
-    const checklistItems = ['Finish notes app', 'implement checklist', 'meet Akshit'];
+    const checklistItems = ['Finish notes app', 'implement checklist', 'meet my friend'];
 
-    useEffect(()=>{
-        if(notes.length>1){
-        notes.map((note)=> {
-        if(note!=null && note.id!=null && note.pinned==null){
-        dispatch(
-        {
-            type: 'pin',
-            id: note.id,
-            pinned: false
-        })
-    }})
-}}
-,[notes])
+
     return ( 
 
         <div className='NoteApp'>
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'100%'}}>
-                <h1 className='heading'>Note App</h1>
-                <button className='reset-btn' onClick={()=>setShowResetPopup(true)}>Reset</button>
+            <div style={{display:'flex', justifyContent:'space-between',alignItems: 'center', width:'100%', marginBottom:'50px'}}>
+                <h1 className='heading'>Notes</h1>
+                <button className='settings' onClick={()=>setShowSettings(true)}><i className="fa-solid fa-gear settings-icon"></i></button>
             </div>
 
-            <Clock />
+            <Clock dateFormat={dateFormat}/>
 
             <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
-
-            <YesNoPopup message={delNoteMessage} isOpen={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
-            <YesNoPopup message={resetMessage} isOpen={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
-            <PopUp key={selectedNote} isOpen={showPopup} id={selectedNote} title={popupTitle} 
+            <SettingPopup show={showSettings} onHide={()=>setShowSettings(false)} onFormatChange={setDateFormat} onReset={()=>setShowResetPopup(true)}/>
+            <YesNoPopup action="Delete" message={delNoteMessage} show={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
+            <YesNoPopup action="Reset" message={resetMessage} show={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
+            <PopUp key={selectedNote} show={showPopup} id={selectedNote} title={popupTitle} 
             content={popupContent} action={selectedNote===undefined ? "add": 'edit'} onSave={handleAddNotes} 
-            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={ new Date().toLocaleDateString()} time={ new Date().toLocaleTimeString()}/>
+            onEdit={handleEditNotes} onClose={()=>{setShowPopup(false); setSelectedNote()}} date={generateDate(new Date())} dateFormat={dateFormat}/>
 
             <button className='add-note-btn' onClick={handleAddClick}>
                 +
@@ -311,8 +233,8 @@ function NoteApp() {
                             {
                                 search.length===0 &&
                                 notes.filter((note)=> {return note.pinned}).map((note) =>
-                                    <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
-                                    lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
+                                    <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} lastEdited={note.lastEdited} 
+                                        dateFormat={dateFormat} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                                 )
                             }
                         </div>
@@ -330,14 +252,14 @@ function NoteApp() {
                             return title.includes(searchText) || content.includes(searchText)
                         })
                         .map( (note) =>
-                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                            <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} dateFormat={dateFormat}
                                 lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                         )
 
                         :
                             //then mapping unpinned notes
                             notes.filter((note)=>{return !note.pinned}).map( (note) =>
-                                <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} 
+                                <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} dateFormat={dateFormat}
                             lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                             )
 
