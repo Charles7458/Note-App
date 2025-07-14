@@ -3,3 +3,5 @@
     
 # Features:
     Responsive, uses localStorage to save your notes.
+
+Developed by Charles.
