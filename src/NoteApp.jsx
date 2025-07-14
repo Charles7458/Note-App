@@ -87,7 +87,7 @@ function NoteApp() {
             createdOn: {date:now.getDate(), month: now.getMonth()+1, year: now.getFullYear(), datetime: `${now.toUTCString().substring(0,17)} | ${now.toLocaleTimeString()}`},
             title:"Intro",
             content: "Hello User, this is a note taking app. "+
-            "Press the + icon to add a new note. You can also edit and delete a note by clicking the icons on the note.",
+            "Press the + icon to add a new note. You can also pin and delete a note by clicking the icons on the note. Click on a note to have the complete view and look more options with the note.",
             pinned: false
         }
     ]
