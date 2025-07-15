@@ -134,11 +134,12 @@
     background-color: rgb(51, 51, 51);
     color: rgba(120, 120, 120, 0.773);
     height: 40vh;
-    width: 50vw;
+    width: clamp(300px,95vw,600px);
     z-index: 5;
     line-height: 40px;
     font-size: 20px;
     padding: 20px;
+    border-radius: 10px;
 }
 
 .info {
@@ -165,6 +166,9 @@
     .option-tray{
         right: 14vw;
     }
+    .info {
+        color: white;
+    }
 }
 
 @media (max-width:470px) {
@@ -185,10 +189,8 @@
         -webkit-line-clamp: 4;
     }
 
-    .info {
-        color: white;
-    }
 }
+
 
 @media (max-width:380px) {
     
@@ -196,11 +198,22 @@
         height: 250px;
         width: 160px;
     }
+
+    .info-div{
+        width: 80vw;
+    }
+    .note-para{
+        -webkit-line-clamp:3;
+    }
 }
 
 @media (max-width:360px) {
     .note {
         width: 80%;
         height: 300px;
+    }
+
+    .note-para {
+        -webkit-line-clamp: 5;
     }
 }

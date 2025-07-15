@@ -9,11 +9,11 @@ function Info({show,createdOn, lastEdited, charNum, onHide}){
     return ReactDOM.createPortal(
         <div className="popup-div" onClick={e=>{e.stopPropagation(); onHide()}}>
             <div className="info-div">
-                <span className="info" ><b style={{marginRight:'150px'}}>Creation: </b>{createdOn.datetime}</span>
+                <span className="info"><b>Creation: </b>{createdOn.datetime}</span>
 
-                {lastEdited && <span className="info" ><b style={{marginRight:'100px'}}>Last Edited: </b>{lastEdited.datetime}</span>}
+                {lastEdited && <span className="info"><b>Last Edit: </b>{lastEdited.datetime}</span>}
 
-                <span className="info" ><b style={{marginRight:' 30px'}}>Number of Characters: </b>{charNum}</span>
+                <span className="info"><b>Number of Characters: </b>{charNum}</span>
             </div>
         </div>,
         document.body
