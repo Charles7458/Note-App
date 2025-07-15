@@ -106,6 +106,7 @@ function NoteApp() {
     const delNoteMessage = "Are you sure, you want to delete this note?"
     const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
     const [dateFormat, setDateFormat] = useState("dd/mm/yyyy");
+    const totalChar = notes.reduce((accumulator, note) => accumulator + note.content.length,0)
 
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
@@ -210,7 +211,7 @@ function NoteApp() {
             <Clock dateFormat={dateFormat}/>
 
             <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
-            <SettingPopup show={showSettings} onHide={()=>setShowSettings(false)} onFormatChange={setDateFormat} onReset={()=>setShowResetPopup(true)}/>
+            <SettingPopup show={showSettings} onHide={()=>setShowSettings(false)} onFormatChange={setDateFormat} onReset={()=>setShowResetPopup(true)} totalChar={totalChar}/>
             <YesNoPopup action="Delete" message={delNoteMessage} show={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
             <YesNoPopup action="Reset" message={resetMessage} show={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
             <PopUp key={selectedNote} show={showPopup} id={selectedNote} title={popupTitle} 

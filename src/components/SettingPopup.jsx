@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import { useState } from 'react';
 import '../styles/settings.css';
 
-export default function SettingPopup({show, onHide, onReset,onFormatChange}) {
+export default function SettingPopup({show, onHide, onReset,onFormatChange, totalChar}) {
     if(!show) {
         return null;
     }
@@ -41,6 +41,13 @@ export default function SettingPopup({show, onHide, onReset,onFormatChange}) {
                     <h3>Delete all notes</h3>
                     <button className='reset-btn' onClick={e=>{e.stopPropagation();onReset()}}>Reset</button>
                 </div>
+                {
+                    totalChar &&
+                    <div className='flex-items-center space-between my-3'>
+                        <h3>Total Characters: </h3>
+                        <p>{totalChar}</p>
+                    </div>
+                }
             </div>
         </div>,
         document.body
