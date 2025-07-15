@@ -8,7 +8,7 @@ function Info({show,createdOn, lastEdited, charNum, onHide}){
 
     return ReactDOM.createPortal(
         <div className="popup-div" onClick={e=>{e.stopPropagation(); onHide()}}>
-            <div className="info-div">
+            <div className="info-div" onClick={e=>{e.stopPropagation()}}>
                 <span className="info"><b>Creation: </b>{createdOn.datetime}</span>
 
                 {lastEdited && <span className="info"><b>Last Edit: </b>{lastEdited.datetime}</span>}
