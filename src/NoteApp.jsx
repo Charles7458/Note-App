@@ -115,7 +115,7 @@ function NoteApp() {
     const delNoteMessage = "Are you sure, you want to delete this note?"
     const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
     const [dateFormat, setDateFormat] = useState("dd/mm/yyyy");
-    const totalChar = notes.reduce((accumulator, note) => accumulator + note.content.length,0)
+    const totalChar = notes.reduce((accumulator, note) => accumulator + note.title.length + note.content.length,0)
 
     useEffect( ()=> {
         localStorage.setItem("notes", JSON.stringify(notes))
