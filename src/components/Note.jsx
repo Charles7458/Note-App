@@ -124,7 +124,7 @@ const Note = memo(function Note({id, dateFormat, createdOn, lastEdited, title, c
 
             <div className='note-text'>
                 <p style={{color:'rgba(120, 120, 120, 0.773)',fontSize:'14px', marginBottom:'10px'}}>{lastEdited ? `Last Edit: ${lastEditedDate}` : `created: ${createdOnDate}`}</p>
-                <h4 className='note-title' style={{marginBottom:"15px"}}>{title}</h4> 
+                <h4 className='note-title' style={{marginBottom:"15px"}}>{title}</h4>
                 <p className='note-para'>{content}</p>
             </div>
         </div>

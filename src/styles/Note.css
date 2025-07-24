@@ -22,6 +22,11 @@
     font-size: 20px;
     font-family: Montserrat, 'Times New Roman';
     color: rgb(206, 206, 206);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .note:hover .note-title{
@@ -66,6 +71,7 @@
     z-index: 2;
     color: white;
     overflow-y: auto;
+    
 }
 
 .zoomed-note::-webkit-scrollbar{

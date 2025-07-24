@@ -61,6 +61,15 @@ function PopUp({show, id=null, date, dateFormat, title, content, onSave, onEdit,
         onClose()
     }
 
+    function handleSubmit() {
+        if(newTitle.length === 0 && newContent.length === 0){
+            alert("Both title and content can't be empty")
+        }
+        else {
+            action=="edit" ? handleEdit() : handleSave();
+        }
+    }
+
     return ReactDOM.createPortal(
         <div className='popup-div'>
             <div className='popup'>
@@ -70,7 +79,7 @@ function PopUp({show, id=null, date, dateFormat, title, content, onSave, onEdit,
                 <b style={{marginRight:'20px', color:'gray'}}>Date: {dateString}</b> <br/>
                 <input type='text' value={newTitle} onChange={e => setNewTitle(e.target.value)} className='title-input' placeholder='Title' /> <br />
                 <textarea  value={newContent} onChange={e => setNewContent(e.target.value)} className='content-input' placeholder='Content'></textarea>
-                <button className='save-note btn' onClick={action=="edit" ? handleEdit : handleSave}> {action=="edit" ? "Edit Note": "Save Note"}</button>
+                <button className='save-note btn' onClick={handleSubmit}> {action=="edit" ? "Edit Note": "Save Note"}</button>
             </div>
         </div>,
         document.body
@@ -100,8 +109,8 @@ function NoteApp() {
     const [showDelPopup, setShowDelPopup] = useState(false);
     const [showResetPopup, setShowResetPopup] = useState(false);
     const [selectedNote, setSelectedNote] = useState();
-    const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : undefined), [selectedNote]) ;
-    const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : undefined) ,[selectedNote]) ;
+    const popupTitle = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).title : ""), [selectedNote]) ;
+    const popupContent = useMemo( ()=> (selectedNote!== undefined ? notes.find( (note)=> note.id === selectedNote).content : "") ,[selectedNote]) ;
     const [search, setSearch] = useState("");
     const delNoteMessage = "Are you sure, you want to delete this note?"
     const resetMessage = "Are you sure to reset?\n All your notes will be lost!"
