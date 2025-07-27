@@ -201,7 +201,6 @@
 @media (max-width:380px) {
     
     .note {
-        height: 250px;
         width: 160px;
     }
 
@@ -216,7 +215,6 @@
 @media (max-width:360px) {
     .note {
         width: 80%;
-        height: 300px;
     }
 
     /* .note-para {
