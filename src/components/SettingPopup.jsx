@@ -2,12 +2,12 @@ import ReactDOM from 'react-dom';
 import { useState } from 'react';
 import '../styles/settings.css';
 
-export default function SettingPopup({show, onHide, onReset,onFormatChange, totalChar}) {
+export default function SettingPopup({show, existingFormat, onHide, onReset,onFormatChange, totalChar}) {
     if(!show) {
         return null;
     }
     const [showOption,setShowOptions] = useState(false)
-    const [format, setFormat] = useState("dd/mm/yyy")
+    const [format, setFormat] = useState(existingFormat)
     const formats = ["dd/mm/yyyy", "mm/dd/yyyy"]
     function handleFormatChange(value) {
         setShowOptions(false)
