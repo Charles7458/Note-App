@@ -192,7 +192,7 @@
     }
 
     .note-para{
-        -webkit-line-clamp: 4;
+        line-height: 20px;
     }
 
 }
@@ -208,9 +208,9 @@
     .info-div{
         width: 80vw;
     }
-    .note-para{
+    /* .note-para{
         -webkit-line-clamp:3;
-    }
+    } */
 }
 
 @media (max-width:360px) {
@@ -219,7 +219,7 @@
         height: 300px;
     }
 
-    .note-para {
+    /* .note-para {
         -webkit-line-clamp: 5;
-    }
+    } */
 }
