@@ -283,7 +283,7 @@ function NoteApp() {
                     {/* <Checklist title='TO DO LIST' items={checklistItems}/> */}
 
                 </div>
-                <Pagination numPages={5} setPage={setPage} currentPage={page}/>
+                {/* <Pagination numPages={5} setPage={setPage} currentPage={page}/> */}
                 </div>
 
             }
