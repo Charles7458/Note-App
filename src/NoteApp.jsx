@@ -6,6 +6,7 @@ import Clock from './components/Clock';
 import Note from './components/Note';
 import Checklist from './components/Checklist';
 import SettingPopup from './components/SettingPopup';
+import Pagination from './components/Pagination';
 /* features:
     1. Add notes. 2. edit note. 3. delete a note. 4.search based on title of note
 
@@ -90,6 +91,7 @@ function PopUp({show, id=null, date, dateFormat, title, content, onSave, onEdit,
 function NoteApp() {
 
     const now = new Date();
+    const LIMIT = 20;
     const initialNotes=[
         {
             id: 0,
@@ -104,6 +106,8 @@ function NoteApp() {
 
     const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
     const nextId = notes.length;
+    const numPages = nextId/LIMIT;
+    const [page, setPage] = useState(1);
     const [showSettings, setShowSettings] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showDelPopup, setShowDelPopup] = useState(false);
@@ -212,7 +216,7 @@ function NoteApp() {
     return ( 
 
         <div className='NoteApp'>
-            <div style={{display:'flex', justifyContent:'space-between',alignItems: 'center', width:'100%', marginBottom:'50px'}}>
+            <div style={{display:'flex', justifyContent:'space-between',alignItems: 'center', width:'100%', marginBottom:'30px'}}>
                 <h1 className='heading'>Notes</h1>
                 <button className='settings' onClick={()=>setShowSettings(true)}><i className="fa-solid fa-gear settings-icon"></i></button>
             </div>
@@ -233,13 +237,13 @@ function NoteApp() {
 
             { (notes.length > 0) && 
 
-                <>
+                <div>
                 {/* pinned tab appears only when not empty */}
                 { (notes.filter((note)=> {return note.pinned}).length > 0) &&
 
                     <div className='pinned-wrapper'>
-                        <h3 style={{padding:'20px'}}>Pinned</h3>
-                        <div className='notes'>
+                        <h3 className='pinned-label'>Pinned</h3>
+                        <div className='pinned-notes'>
                             {/* first mapping pinned notes */}
                             {
                                 search.length===0 &&
@@ -277,8 +281,10 @@ function NoteApp() {
                     }
 
                     {/* <Checklist title='TO DO LIST' items={checklistItems}/> */}
+
                 </div>
-                </>
+                <Pagination numPages={5} setPage={setPage} currentPage={page}/>
+                </div>
 
             }
 

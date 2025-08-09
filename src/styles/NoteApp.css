@@ -7,7 +7,7 @@ body {
     overflow-x: hidden;
 }
 .NoteApp {
-    padding: 30px;
+    padding: 20px 30px 30px 30px;
     background-color: rgb(26, 26, 26);
     color: azure;
     display: block;
@@ -42,6 +42,21 @@ body {
 
 
 .notes {
+    display: grid;
+    min-height: 200px;
+    width: 100%;
+    justify-self: center;
+    justify-content: start;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: rgb(42, 41, 41);
+    padding: 20px;
+    border-radius: 20px;
+    overflow-x: hidden;
+    column-gap: 30px;
+    row-gap: 30px;
+}
+
+.pinned-notes {
     display: grid;
     min-height: 200px;
     width: 100%;
@@ -212,6 +227,10 @@ body {
     margin-block-start: 20px;
 }
 
+.pinned-label {
+    padding: 20px 0px 0px 50px;
+}
+
 .pinned-wrapper {
     background-color: rgb(42, 41, 41);
     padding: 30px auto;
@@ -224,6 +243,8 @@ body {
         transform: rotate(120deg);
     }
 }
+
+
 @media (max-width: 800px) {
     .notes {
         grid-template-columns: 1fr 1fr 1fr;
@@ -246,12 +267,24 @@ body {
         background-color: transparent;
     }
 
+    .pinned-notes {
+        background-color: transparent;
+        grid-template-columns: 1fr 1fr;
+        padding: 20px 0;
+    }
+
+    .pinned-label {
+        padding: 0;
+    }
+
     .pinned-wrapper{
         height: fit-content;
-        padding-bottom: 0px;
-        border-radius: 0px;
-        border-bottom: 1px solid rgb(152, 152, 152);
-        background-color: transparent;
+        /* padding-bottom: 0px;
+        border-radius: 0px; */
+        /* border-bottom: 1px solid rgb(152, 152, 152); */
+        /* background-color: ; */
+        background-color: rgba(41, 38, 38, 0.297);
+        padding:20px;
     }
 
     .content-input {
