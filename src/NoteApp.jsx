@@ -239,14 +239,14 @@ function NoteApp() {
 
                 <div>
                 {/* pinned tab appears only when not empty */}
-                { (notes.filter((note)=> {return note.pinned}).length > 0) &&
-
+                { (notes.filter((note)=> {return note.pinned}).length > 0) && search.length ===0 &&
+                
+                
                     <div className='pinned-wrapper'>
                         <h3 className='pinned-label'>Pinned</h3>
                         <div className='pinned-notes'>
                             {/* first mapping pinned notes */}
                             {
-                                search.length===0 &&
                                 notes.filter((note)=> {return note.pinned}).map((note) =>
                                     <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} lastEdited={note.lastEdited} 
                                         dateFormat={dateFormat} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />

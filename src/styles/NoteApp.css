@@ -236,6 +236,14 @@ body {
     padding: 30px auto;
     border-radius: 20px;
     margin-bottom: 30px;
+    justify-self: center;
+}
+
+.full-clock { color: gray;}
+
+.clock-date, .clock-time {
+    color: gray;
+    display: none;
 }
 
 @keyframes rotate {
@@ -268,9 +276,12 @@ body {
     }
 
     .pinned-notes {
+        width: 100%;
         background-color: transparent;
         grid-template-columns: 1fr 1fr;
-        padding: 20px 0;
+        padding: 10px 0;
+        overflow: visible;
+        column-gap: 10px;
     }
 
     .pinned-label {
@@ -283,8 +294,9 @@ body {
         border-radius: 0px; */
         /* border-bottom: 1px solid rgb(152, 152, 152); */
         /* background-color: ; */
+        width: 95vw;
         background-color: rgba(41, 38, 38, 0.297);
-        padding:20px;
+        padding:20px 10px;
     }
 
     .content-input {
@@ -299,6 +311,21 @@ body {
 }
 
 @media (max-width: 360px) {
+    .full-clock{
+        display: none;
+    }
+
+    .clock-date, .clock-time {
+        display: block;
+        margin-block: 10px;
+    }
+
+    .pinned-notes{
+        grid-template-columns: 1fr;
+    }
+    .pinned-label{
+        padding-left: 10px;
+    }
     .notes {
         grid-template-columns: 1fr;
     }
