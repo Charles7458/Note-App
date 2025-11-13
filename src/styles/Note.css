@@ -71,7 +71,6 @@
     z-index: 2;
     color: white;
     overflow-y: auto;
-    
 }
 
 .zoomed-note::-webkit-scrollbar{
@@ -93,12 +92,12 @@
 .zn-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0px;
 }
 
 .details {
     color: gray;
     font-size: 15px;
+    margin-bottom:10px;
 }
 
 .options-btn{

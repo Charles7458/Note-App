@@ -273,7 +273,7 @@ function NoteApp() {
 
                         :
                             //then mapping unpinned notes
-                            notes.filter((note)=>{return !note.pinned}).map( (note) =>
+                            notes.toReversed().filter((note)=>{return !note.pinned}).map( (note) =>
                                 <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} dateFormat={dateFormat}
                             lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                             )
