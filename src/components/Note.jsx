@@ -55,9 +55,7 @@ function ZoomedNote({show, onHide, title, content, lastEdited,lastEditedDate, cr
 
                 <div className='zoomed-note' onClick={e=>{e.stopPropagation();setShowOptions(false)}}>
                     <div style={{display:'flex',justifyContent:'space-between'}}>
-                        {lastEdited ? <p className='details'>last edit: {lastEditedDate}</p> :
                         <p className='details'>created: {createdOnDate}</p>
-                            }
                     </div>
                     <div className='zn-header'>{/*header */}
                         <h1>{title}</h1>
@@ -123,7 +121,7 @@ const Note = memo(function Note({id, dateFormat, createdOn, lastEdited, title, c
             </div>
 
             <div className='note-text'>
-                <p style={{color:'rgba(120, 120, 120, 0.773)',fontSize:'14px', marginBottom:'10px'}}>{lastEdited ? `Last Edit: ${lastEditedDate}` : `created: ${createdOnDate}`}</p>
+                <p style={{color:'rgba(120, 120, 120, 0.773)',fontSize:'14px', marginBottom:'10px'}}>{`created: ${createdOnDate}`}</p>
                 <h4 className='note-title' style={{marginBottom:"15px"}}>{title}</h4>
                 <p className='note-para'>{content}</p>
             </div>
