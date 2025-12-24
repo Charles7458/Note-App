@@ -21,7 +21,7 @@ export default function ImportExportPopup({show,close, isImport, onDownload, onI
                 return;
             }
             const reader = new FileReader();
-            reader.readAsText(file);//starts reader.onload after reading
+            reader.readAsText(file); //starts reader.onload after reading
             reader.onload = (e) => {
                 try {
                     const tempNotes = JSON.parse(e.target.result)
@@ -42,17 +42,6 @@ export default function ImportExportPopup({show,close, isImport, onDownload, onI
                 }
             }
         }
-
-        // function handleImport(){
-        //     if(importEvent != null){
-        //         console.log("import file exists")
-        //         onImport(importedNotes)
-        //     }
-        //     else{
-        //         alert("Choose a file first!")
-        //     }
-        // }
-
 
         return (
             <div className="popup-div" onClick={close}>

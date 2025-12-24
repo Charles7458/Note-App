@@ -3,5 +3,6 @@
     
 # Features:
     Responsive, uses localStorage to save your notes.
+    Feature to take backup of notes, and later import and sync backup notes.
 
 Developed by Charles.
