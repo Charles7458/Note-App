@@ -222,7 +222,14 @@ function NoteApp() {
     const checklistItems = ['Finish notes app', 'implement checklist', 'meet my friend'];
 
     function downloadNotes() {
-        const json = JSON.stringify(notes, null, 2);
+        let downloadNotes = []
+        if(notes[notes.length-1].title == "Intro" && notes[notes.length-1].content == initialNotes[0].content){
+            downloadNotes = notes.slice(0,notes.length-1)
+        }
+        else{
+            downloadNotes = notes
+        }
+        const json = JSON.stringify(downloadNotes, null, 2);
         const blob = new Blob([json], {type: "application/json"});
         const url = URL.createObjectURL(blob);
 
