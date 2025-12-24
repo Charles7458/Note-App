@@ -65,7 +65,7 @@ export default function ImportExportPopup({show,close, isImport, onDownload, onI
                         }
                     {
                         isImport ?
-                        <div style={{display:'flex',justifyContent:'space-evenly',marginBlock:"20px"}}>
+                        <div className="import-input-wrapper">
                             <input type="file" id="fileInput" accept=".json" onChange={e=>setImportEvent(e)} className="file-input"/>
                             <button className="download-btn" onClick={handleImport}>
                                 Import

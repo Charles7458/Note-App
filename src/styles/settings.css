@@ -114,12 +114,32 @@
     cursor: pointer;
 }
 
+.import-input-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    margin-block: 20px;
+    align-items: center;
+}
+
 .file-input {
     background-color: gray;
     height: fit-content;
     width: fit-content;
+    margin-block: 20px;
 }
 
 .file-input::file-selector-button{
     padding: 5px 10px;
+}
+
+@media(max-width: 430px){
+    .import-input-wrapper {
+        display: block;
+    }
+}
+
+@media(max-width: 350px){
+    .file-input{
+        width:200px;
+    }
 }
