@@ -35,25 +35,44 @@
 .space-between {
     justify-content: space-between;
 }
+
 .reset-btn {
-    padding: 15px 30px;
+    padding: 12px 30px;
     font-weight: 700;
     border-radius: 10px;
-    background-color: rgb(239, 47, 47);
-    color: white;
+    background-color: whitesmoke;
+    color: red;
     cursor:pointer;
     border: none;
 }
 
 .reset-btn:hover {
-    background-color: red;
-    scale: 1.05;
+    background-color: rgb(235, 50, 50);
+    color: whitesmoke;
+    scale: 1.02;
+    transition-duration: 50ms;
 }
+
+.download-btn, .import-btn {
+    background-color: whitesmoke;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
 
 .dropdown-container {
     position: relative;
     display: inline-block;
     z-index: 5;
+}
+
+.import-btn:hover, .download-btn:hover {
+    background-color: black;
+    color: whitesmoke;
+    transition-duration: 50ms;
 }
 .dropdown {
     position:fixed;
@@ -70,4 +89,37 @@
 
 .dropdown-option:hover {
     background-color: gray;
+}
+
+.import-popup {
+    position: fixed;
+    top: 10%;
+    z-index: 5;
+    padding: 0px 0px 30px 0px;
+    height: fit-content;
+    width: clamp(250px, 85vw, 700px);
+    background-color: rgb(54, 55, 58);
+    color:white;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.close-btn {
+    color: gray;
+    background-color: transparent;
+    border: none;
+    text-align: end;
+    padding: 10px 20px ;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.file-input {
+    background-color: gray;
+    height: fit-content;
+    width: fit-content;
+}
+
+.file-input::file-selector-button{
+    padding: 5px 10px;
 }

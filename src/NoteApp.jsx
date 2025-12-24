@@ -106,7 +106,6 @@ function NoteApp() {
 
     const [notes, dispatch] = useReducer(noteReducer, JSON.parse(localStorage.getItem("notes")) || initialNotes);
     const nextId = notes.length;
-    const numPages = nextId/LIMIT;
     const [page, setPage] = useState(1);
     const [showSettings, setShowSettings] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
@@ -210,8 +209,73 @@ function NoteApp() {
         localStorage.clear();
         location.reload();
     }
+
+    function handleReplace(newNotes){
+        dispatch(
+            {
+                type: "replace",
+                notes: newNotes
+            }
+        )
+    }
+
     const checklistItems = ['Finish notes app', 'implement checklist', 'meet my friend'];
 
+    function downloadNotes() {
+        const json = JSON.stringify(notes.toReversed(),null, 2);
+        const blob = new Blob([json], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "my-notes.json";
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importNotes(importedNotes) {
+
+        console.log("importNotes function running")
+
+        let currId = nextId;
+        let tempNotes = [];
+        console.log("import length: "+importedNotes.length)
+        console.log("notes length: "+notes.length)
+        for(let i=0;i<importedNotes.length;i++){
+            
+            let note = importedNotes[i];
+            let prototype = Object.getPrototypeOf(notes[0])
+            try{
+                if(Object.getPrototypeOf(importedNotes[i]) == prototype){
+                    note.id = currId;
+                    console.log(tempNotes.push(note));
+                    currId++;
+                    console.log("note"+i+": id:"+note.id + note.title)
+                }
+                else {
+                    throw new Error("invalid note element")
+                }
+            }
+            catch(err) {
+                console.error(err);
+                alert("Invalid notes file")
+                return;
+            }
+        }
+        tempNotes = [...tempNotes,...notes];
+        console.log("temp notes length:"+tempNotes.length)
+
+        if(tempNotes.length == importedNotes.length+notes.length){
+            console.log("import successful")
+            handleReplace(tempNotes);
+            alert("Import successful")
+                
+        }
+        else{
+            alert("Import failed")
+        }
+        
+    }
 
     return ( 
 
@@ -224,7 +288,9 @@ function NoteApp() {
             <Clock dateFormat={dateFormat}/>
 
             <input type='search' placeholder='Search' className='search' value={search} onChange={e => setSearch(e.target.value)}/>
-            <SettingPopup show={showSettings} existingFormat={dateFormat} onHide={()=>setShowSettings(false)} onFormatChange={setDateFormat} onReset={()=>setShowResetPopup(true)} totalChar={totalChar}/>
+            <SettingPopup show={showSettings} existingFormat={dateFormat} onHide={()=>setShowSettings(false)} 
+            onFormatChange={setDateFormat} onReset={()=>setShowResetPopup(true)} totalChar={totalChar}
+            onDownload={downloadNotes}  onImport={importNotes}/>
             <YesNoPopup action="Delete" message={delNoteMessage} show={showDelPopup} onYes={handleDeleteNotes} onNo={()=>setShowDelPopup(false)}/> {/* Delete Note Popup*/}
             <YesNoPopup action="Reset" message={resetMessage} show={showResetPopup} onYes={handleReset} onNo={()=>setShowResetPopup(false)}/>  {/* Reset Popup*/}
             <PopUp key={selectedNote} show={showPopup} id={selectedNote} title={popupTitle} 
@@ -273,7 +339,7 @@ function NoteApp() {
 
                         :
                             //then mapping unpinned notes
-                            notes.toReversed().filter((note)=>{return !note.pinned}).map( (note) =>
+                            notes.filter((note)=>{return !note.pinned}).map( (note) =>
                                 <Note key={note.id} id={note.id} title={note.title} content={note.content} createdOn={note.createdOn} dateFormat={dateFormat}
                             lastEdited={note.lastEdited} onEdit={handlEditClick} onDelete={handleDeleteClick} pinned={note.pinned} onPin={()=>handlePin(note.id)} onUnpin={()=>handleUnpin(note.id)} />
                             )
@@ -283,8 +349,7 @@ function NoteApp() {
                     {/* <Checklist title='TO DO LIST' items={checklistItems}/> */}
 
                 </div>
-                {/* <Pagination numPages={5} setPage={setPage} currentPage={page}/> */}
-                </div>
+            </div>
 
             }
 

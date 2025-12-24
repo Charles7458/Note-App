@@ -3,13 +3,13 @@ export default function noteReducer(notes, action) {
         case 'add': 
         {
             console.log(`note added. ID: ${action.id}`);
-           return [...notes, {
-            id: action.id,
-            createdOn: action.createdOn,
-            title: action.title,
-            content: action.content,
-            pinned: false
-           }];
+            return [{
+                id: action.id,
+                createdOn: action.createdOn,
+                title: action.title,
+                content: action.content,
+                pinned: false
+            }, ...notes];
         }
 
         case 'edit': {
@@ -43,6 +43,10 @@ export default function noteReducer(notes, action) {
 
         case 'delete': {
             return notes.filter((note)=> note.id !== action.id)
+        }
+
+        case 'replace': {
+            return action.notes
         }
 
         default: {
